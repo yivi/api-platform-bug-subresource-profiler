@@ -1,8 +1,9 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Author
 {
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -28,6 +30,7 @@ class Author
 
     /**
      * @ORM\OneToMany(targetEntity=Book::class, mappedBy="author")
+     * @ApiSubresource
      */
     private $books;
 
@@ -63,7 +66,7 @@ class Author
 
     public function addBook(Book $book): self
     {
-        if (!$this->books->contains($book)) {
+        if ( ! $this->books->contains($book)) {
             $this->books[] = $book;
             $book->setAuthor($this);
         }
@@ -73,11 +76,9 @@ class Author
 
     public function removeBook(Book $book): self
     {
-        if ($this->books->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getAuthor() === $this) {
-                $book->setAuthor(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->books->removeElement($book) && $book->getAuthor() === $this) {
+            $book->setAuthor(null);
         }
 
         return $this;
