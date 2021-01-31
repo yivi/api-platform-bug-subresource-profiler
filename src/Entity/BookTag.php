@@ -22,7 +22,7 @@ class BookTag
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="bookTags")
+     * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="bookTags")
      */
     private $books;
 
